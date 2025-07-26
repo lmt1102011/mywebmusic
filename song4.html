@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Đáp án cuối cùng</title>
+  <link rel="stylesheet" href="styles-song.css" />
+</head>
+<body>
+  <div>
+    <a href="index.html" class="back-button">back</a>
+  </div>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/e/1/4/c/e14c2a971cdc07af45d943701b8b5c13.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>Đáp án cuối cùng</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="DapAnCuoiCung-QuanAP-7887096.mp3"></audio>
+  </div>
+
+  <script>
+    let animationId = null;
+const audio = document.getElementById("player");
+const icon = document.getElementById("play-icon");
+const lyricsDisplay = document.getElementById("lyricsDisplay");
+const cdImage = document.getElementById("cdImage");
+    const lyrics = [
+      { time: 26.59, line: "Trùng hợp thay mưa rơi đúng lúc này" },
+      { time: 31.98, line: "Càng nhân thêm niềm đau của một người vẫn đang tổn thương" },
+      { time: 39.62, line: "Ngày mấy tháng nào đây anh quên luôn rồi" },
+      { time: 45.22, line: "Điều anh nhớ nhất là chỉ mới đây thôi" },
+      { time: 51.88, line: "Là hôm nay dù ngồi cạnh bên nhau" },
+      { time: 57.18, line: "Không nói với nhau một câu" },
+      { time: 60.60, line: "Mình không như giây phút đầu" },
+      { time: 65.40, line: "Hình như em muốn nói gì, nhân tiện nói đi" },
+      { time: 72.07, line: "Còn gì muốn giấu anh không?" },
+      { time: 80.23, line: "Đùa chẳng vui đâu em nhé" },
+      { time: 83.36, line: "Chẳng ai muốn một lời chia tay" },
+      { time: 86.62, line: "Đừng bóp tim anh như vậy" },
+      { time: 89.65, line: "Thật sự anh không muốn nghe" },
+      { time: 93.25, line: "Đừng làm như thế" },
+      { time: 95.88, line: "Cứ hét lên cho hả hê" },
+      { time: 98.67, line: "Cứ mắng anh như ngày xưa" },
+      { time: 102.46, line: "Còn hơn em chẳng nói gì" },
+      { time: 105.77, line: "Nhìn mắt anh, trả lời anh đi" },
+      { time: 108.96, line: "Liệu em vẫn còn cần anh không?" },
+      { time: 111.92, line: "Vị trí anh ở trong lòng liệu còn hay đã mất?" },
+      { time: 118.91, line: "Xin em làm ơn cho anh lý do vì sao em như vậy" },
+      { time: 125.95, line: "Một đáp án thật giản đơn" },
+      { time: 129.24, line: 'Chỉ mỗi ba từ thôi, "Hết yêu rồi"' },
+      { time: 136.02, line: "" },
+      { time: 144.88, line: "Anh không nỡ, thật sự anh không nỡ" },
+      { time: 149.96, line: "Cứ ngỡ mỗi khi mình sai thì cả hai cũng sẽ quay lại" },
+      { time: 158.69, line: "Tình yêu ai cũng điên cuồng, cuối cùng vẫn buông" },
+      { time: 164.62, line: "Buộc lòng đường ai nấy đi" },
+      { time: 172.88, line: "Đùa chẳng vui đâu em nhé" },
+      { time: 176.03, line: "Chẳng ai muốn một lời chia tay" },
+      { time: 179.18, line: "Đừng bóp tim anh như vậy" },
+      { time: 182.15, line: "Thật sự anh không muốn nghe" },
+      { time: 185.63, line: "Đừng làm như thế" },
+      { time: 188.17, line: "Cứ hét lên cho hả hê" },
+      { time: 191.47, line: "Cứ mắng anh như ngày xưa" },
+      { time: 194.45, line: "Còn hơn em chẳng nói gì" },
+      { time: 198.96, line: "Nhìn mắt anh trả lời anh đi" },
+      { time: 201.66, line: "Liệu em vẫn còn cần anh không?" },
+      { time: 205.15, line: "Vị trí anh ở trong lòng liệu còn hay đã mất?" },
+      { time: 211.66, line: "Xin em làm ơn cho anh lý do vì sao em như vậy" },
+      { time: 218.52, line: "Một đáp án thật giản đơn" },
+      { time: 222.39, line: 'Chỉ mỗi ba từ thôi, "Hết yêu rồi"' },
+      { time: 227.03, line: "Nước mắt em không thèm rơi khi em bước đi" },
+      { time: 231.65, line: "Từ lâu cái tôi của anh quá lớn lại khóc" },
+      { time: 240.24, line: "Nhìn mắt anh trả lời anh đi" },
+      { time: 243.28, line: "Nhìn mắt anh trả lời anh đi" },
+      { time: 246.23, line: "Liệu em vẫn còn cần anh không?" },
+      { time: 249.52, line: "Vị trí anh ở trong lòng liệu còn hay đã mất?" },
+      { time: 256.34, line: "Xin em làm ơn cho anh lý do vì sao em như vậy" },
+      { time: 263.60, line: "Một đáp án thật giản đơn" },
+      { time: 266.69, line: 'Chỉ mỗi ba từ thôi, "Hết yêu rồi"' },
+      { time: 276.37, line: "Một đáp án thật giản đơn" },
+      { time: 279.72, line: 'Chỉ mỗi ba từ thôi, "Hết yêu rồi"' },
+      { time: 288.73, line: "" }
+
+];
+
+let currentLine = -1;
+let isPlaying = false;
+
+function showLyric(index) {
+  lyricsDisplay.innerHTML = "";
+  const lineDiv = document.createElement("div");
+  lineDiv.className = "marquee-text";
+  lineDiv.textContent = lyrics[index].line;
+
+  let duration = 8;
+  if (index < lyrics.length - 1) {
+    duration = lyrics[index + 1].time - lyrics[index].time;
+  }
+
+  lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+  lyricsDisplay.appendChild(lineDiv);
+}
+
+function syncLyrics() {
+  const currentTime = audio.currentTime;
+
+  if (currentLine === -1 && currentTime >= lyrics[0].time) {
+    currentLine = 0;
+    showLyric(currentLine);
+  } else if (
+    currentLine < lyrics.length - 1 &&
+    currentTime >= lyrics[currentLine + 1].time
+  ) {
+    currentLine++;
+    showLyric(currentLine);
+  }
+
+  if (isPlaying) {
+    animationId = requestAnimationFrame(syncLyrics);
+  }
+}
+
+function togglePlayPause() {
+  if (audio.paused) {
+    audio.play();
+    icon.src = "pause.png";
+    icon.alt = "Pause";
+    cdImage.style.animationPlayState = "running";
+    currentLine = -1;
+    isPlaying = true;
+    animationId = requestAnimationFrame(syncLyrics);
+  } else {
+    audio.pause();
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    currentLine = -1;
+    isPlaying = false;
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+audio.addEventListener("ended", () => {
+  if (animationId) cancelAnimationFrame(animationId);
+  animationId = null;
+  icon.src = "play.png";
+  icon.alt = "Play";
+  cdImage.style.animationPlayState = "paused";
+  lyricsDisplay.innerHTML = "";
+  audio.currentTime = 0;
+  currentLine = -1;
+  isPlaying = false;
+});
+  </script>
+</body>
+</html>

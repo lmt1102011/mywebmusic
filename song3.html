@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bông hoa đẹp nhất</title>
+  <link rel="stylesheet" href="styles-song.css" />
+</head>
+<body>
+  <div>
+    <a href="index.html" class="back-button">back</a>
+  </div>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/7/8/0/f/780f82ea6758f9b9ae2b6df1536e8cbb.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>Bông hoa đẹp nhất</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="BongHoaDepNhat-QuanAP-16059329.mp3"></audio>
+  </div>
+
+  <script>
+    let animationId = null;
+const audio = document.getElementById("player");
+const icon = document.getElementById("play-icon");
+const lyricsDisplay = document.getElementById("lyricsDisplay");
+const cdImage = document.getElementById("cdImage");
+
+    const lyrics = [
+      { time: 19.14, line: "Mãi sau này anh mới biết" },
+      { time: 22.66, line: "Bông hoa đó không phải của anh" },
+      { time: 26.97, line: "Chẳng qua là anh đã đi ngang qua đúng mùa hoa đẹp nhất" },
+      { time: 35.90, line: "Con tim anh cứ ngỡ là duyên số" },
+      { time: 40.08, line: "Thì ra đó là chỉ là chuyện hư vô" },
+      { time: 44.22, line: "Lý do chia tay là gì em có biết không?" },
+      { time: 51.22, line: "Vì em không yêu anh như anh yêu em" },
+      { time: 55.08, line: "Vì em xem anh chỉ là nhất thời" },
+      { time: 60.68, line: "Người mới chơi vơi như anh, làm sao anh mơ có em" },
+      { time: 68.50, line: "Mãi sau này xa nhau anh mới thấu" },
+      { time: 72.40, line: "Suốt chặng đường khi yêu ai biết đâu" },
+      { time: 76.77, line: "Người mình từng thương giờ như hai người xa lạ đã biết hết về nhau" },
+      { time: 84.03, line: "Sau này gặp nhau anh muốn biết" },
+      { time: 87.76, line: "Mùa hoa đẹp nhất em có nhớ gì" },
+      { time: 93.03, line: "Ngày đó yêu nhau lúc xuân thì" },
+      { time: 96.95, line: "Mà điều gì làm em quay lưng đi" },
+      { time: 101.15, line: "Nếu gặp lại nhau em vẫn ôm anh" },
+      { time: 105.48, line: "Hay em sẽ né tránh anh" },
+      { time: 109.47, line: "Chỉ dám buông đôi câu chào" },
+      { time: 112.86, line: "Dạo này anh sao?" },
+      { time: 117.96, line: "" },
+      { time: 133.07, line: "Mãi sau này anh mới biết" },
+      { time: 136.86, line: "Người đó không phải người yêu anh" },
+      { time: 140.92, line: "Chẳng qua là anh đã đi ngang qua đúng ngày người cô đơn nhất" },
+      { time: 149.31, line: "Thì thầm vài câu mình nói yêu nhau" },
+      { time: 153.46, line: "Thế nên chuyện mình cũng chẳng tới đâu" },
+      { time: 158.15, line: "Lý do chia tay là gì em có biết không?" },
+      { time: 165.08, line: "Vì em không yêu anh như anh yêu em" },
+      { time: 169.15, line: "Vì em xem anh chỉ là nhất thời" },
+      { time: 174.49, line: "Người mới chơi vơi như anh, làm sao anh mơ có em" },
+      { time: 182.42, line: "Mãi sau này xa nhau anh mới thấu" },
+      { time: 186.48, line: "Suốt chặng đường khi yêu ai biết đâu" },
+      { time: 190.63, line: "Người mình từng thương giờ như hai người xa lạ đã biết hết về nhau" },
+      { time: 198.18, line: "Sau này gặp nhau anh muốn biết" },
+      { time: 201.75, line: "Mùa hoa đẹp nhất em có nhớ gì" },
+      { time: 206.93, line: "Ngày đó yêu nhau lúc xuân thì" },
+      { time: 210.87, line: "Mà điều gì làm em quay lưng đi" },
+      { time: 215.07, line: "Nếu gặp lại nhau em vẫn ôm anh" },
+      { time: 219.35, line: "Hay em sẽ né tránh anh" },
+      { time: 223.26, line: "Chỉ dám buông đôi câu chào" },
+      { time: 226.56, line: "Dạo này anh sao?" },
+      { time: 230.05, line: "Vì em không yêu anh như anh yêu em" },
+      { time: 234.26, line: "Vì em xem anh chỉ là nhất thời" },
+      { time: 239.52, line: "Người mới chơi vơi như anh, làm sao anh mơ có em" },
+      { time: 247.39, line: "Mãi sau này xa nhau anh mới thấu" },
+      { time: 251.43, line: "Suốt chặng đường khi yêu ai biết đâu" },
+      { time: 255.85, line: "Người mình từng thương giờ như hai người xa lạ đã biết hết về nhau" },
+      { time: 262.84, line: "Và sau này gặp nhau anh muốn biết" },
+      { time: 266.78, line: "Mùa hoa đẹp nhất em có nhớ gì" },
+      { time: 272.03, line: "Ngày đó yêu nhau lúc xuân thì" },
+      { time: 275.82, line: "Mà điều gì làm em quay đi" },
+      { time: 280.05, line: "Nếu gặp lại nhau em vẫn ôm anh" },
+      { time: 284.30, line: "Hay em sẽ né tránh anh" },
+      { time: 288.38, line: "Chỉ dám buông đôi câu chào" },
+      { time: 291.67, line: "Dạo này anh sao?" },
+      { time: 295.22, line: "" }
+
+];
+
+    let currentLine = -1;
+let isPlaying = false;
+
+function showLyric(index) {
+  lyricsDisplay.innerHTML = "";
+  const lineDiv = document.createElement("div");
+  lineDiv.className = "marquee-text";
+  lineDiv.textContent = lyrics[index].line;
+
+  let duration = 8;
+  if (index < lyrics.length - 1) {
+    duration = lyrics[index + 1].time - lyrics[index].time;
+  }
+
+  lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+  lyricsDisplay.appendChild(lineDiv);
+}
+
+function syncLyrics() {
+  const currentTime = audio.currentTime;
+
+  if (currentLine === -1 && currentTime >= lyrics[0].time) {
+    currentLine = 0;
+    showLyric(currentLine);
+  } else if (
+    currentLine < lyrics.length - 1 &&
+    currentTime >= lyrics[currentLine + 1].time
+  ) {
+    currentLine++;
+    showLyric(currentLine);
+  }
+
+  if (isPlaying) {
+    animationId = requestAnimationFrame(syncLyrics);
+  }
+}
+
+function togglePlayPause() {
+  if (audio.paused) {
+    audio.play();
+    icon.src = "pause.png";
+    icon.alt = "Pause";
+    cdImage.style.animationPlayState = "running";
+    currentLine = -1;
+    isPlaying = true;
+    animationId = requestAnimationFrame(syncLyrics);
+  } else {
+    audio.pause();
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    currentLine = -1;
+    isPlaying = false;
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+audio.addEventListener("ended", () => {
+  if (animationId) cancelAnimationFrame(animationId);
+  animationId = null;
+  icon.src = "play.png";
+  icon.alt = "Play";
+  cdImage.style.animationPlayState = "paused";
+  lyricsDisplay.innerHTML = "";
+  audio.currentTime = 0;
+  currentLine = -1;
+  isPlaying = false;
+});
+  </script>
+</body>
+</html>

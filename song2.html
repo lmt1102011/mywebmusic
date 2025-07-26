@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ai-là-người-thương-em</title>
+  <link rel="stylesheet" href="styles-song.css" />
+</head>
+<body>
+  <div>
+    <a href="index.html" class="back-button">back</a>
+  </div>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/7/e/6/0/7e6088a95d78a12eae1cf55d0b3cc3b9.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>Ai là người thương em</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="AiLaNguoiThuongEm-QuanAP-16059406.mp3"></audio>
+  </div>
+
+  <script>
+     let animationId = null;
+const audio = document.getElementById("player");
+const icon = document.getElementById("play-icon");
+const lyricsDisplay = document.getElementById("lyricsDisplay");
+const cdImage = document.getElementById("cdImage");
+
+    const lyrics = [
+      { "time": 44.50, "line": "Người con gái anh từng yêu sao rồi?" },
+  { "time": 50.09, "line": "Có một mình đi dưới mưa lúc buồn" },
+  { "time": 55.44, "line": "Lệ còn rơi khi ngồi xem thước phim buồn" },
+  { "time": 60.89, "line": "Ôm thật chặt vào ai khóc như đứa trẻ" },
+  { "time": 66.53, "line": "Người con gái anh từng yêu quên rồi" },
+  { "time": 71.98, "line": "Có những chiều tay nắm tay ngóng đợi" },
+  { "time": 77.31, "line": "Hoàng hôn xuống ta kề vai nói những lời" },
+  { "time": 82.87, "line": "Rằng đôi ta sẽ chỉ cần nhau thôi" },
+  { "time": 88.26, "line": "Hà ha ha ha há ha hà ha" },
+  { "time": 93.47, "line": "Cô gái anh yêu hay quan tâm anh và nhắc anh bao điều" },
+  { "time": 98.72, "line": "Em thích hoa hồng và mùa đông, được anh ôm phía sau lưng" },
+  { "time": 104.26, "line": "Em nói bên anh qua bao nơi em cảm thấy rất nhẹ nhàng" },
+  { "time": 110.13, "line": "Vậy giờ ai là người cho em yên bình?" },
+  { "time": 115.12, "line": "Em muốn xa anh khi yêu thương đang gìn giữ vẫn an lành" },
+  { "time": 120.54, "line": "Xoá những hi vọng một tình yêu và hai trái tim xanh" },
+  { "time": 126.20, "line": "Quên hết bao năm đi bên em anh thật không thể làm được" },
+  { "time": 131.81, "line": "Người mình thương giờ chẳng nhớ tên quen thuộc" },
+  { "time": 159.12, "line": "Người con gái anh từng yêu quên rồi" },
+  { "time": 164.63, "line": "Có những chiều tay nắm tay ngóng đợi" },
+  { "time": 170.03, "line": "Hoàng hôn xuống ta kề vai nói những lời" },
+  { "time": 175.50, "line": "Rằng đôi ta sẽ chỉ cần nhau thôi" },
+  { "time": 180.88, "line": "Hà ha ha ha há ha há ha hà (có phải sở thích của anh là đánh người đúng không?)" },
+  { "time": 185.97, "line": "Cô gái anh yêu hay quan tâm anh và nhắc anh bao điều" },
+  { "time": 191.45, "line": "Em thích hoa hồng và mùa đông được anh ôm phía sau lưng" },
+  { "time": 197.00, "line": "Em nói bên anh qua bao nơi em cảm thấy rất nhẹ nhàng" },
+  { "time": 202.64, "line": "Vậy giờ ai là người cho em yên bình?" },
+  { "time": 207.84, "line": "Em muốn xa anh khi yêu thương đang gìn giữ vẫn an lành (mày còn nhớ tao không)" },
+  { "time": 213.26, "line": "Xoá những hi vọng một tình yêu và hai trái tim xanh" },
+  { "time": 218.70, "line": "Quên hết bao năm đi bên em anh thật không thể làm được" },
+  { "time": 224.59, "line": "Người mình thương giờ chẳng nhớ tên quen thuộc" },
+  { "time": 229.71, "line": "Cô gái anh yêu hay quan tâm anh và nhắc anh bao điều" },
+  { "time": 235.40, "line": "Em thích hoa hồng và mùa đông được anh ôm phía sau lưng" },
+  { "time": 240.77, "line": "Em nói bên anh qua bao nơi em cảm thấy rất nhẹ nhàng" },
+  { "time": 246.35, "line": "Vậy giờ ai là người cho em yên bình?" },
+  { "time": 251.79, "line": "Em muốn xa anh khi yêu thương đang gìn giữ vẫn an lành" },
+  { "time": 256.89, "line": "Xoá những hi vọng một tình yêu và hai trái tim xanh" },
+  { "time": 262.53, "line": "Quên hết bao năm đi bên em anh thật không thể làm được" },
+  { "time": 268.10, "line": "Người mình thương giờ chẳng nhớ tên quen thuộc" },
+  { "time": 273.67, "line": "Người mình thương giờ chẳng nhớ tên anh rồi" }
+    ];
+
+    let currentLine = -1;
+let isPlaying = false;
+
+function showLyric(index) {
+  lyricsDisplay.innerHTML = "";
+  const lineDiv = document.createElement("div");
+  lineDiv.className = "marquee-text";
+  lineDiv.textContent = lyrics[index].line;
+
+  let duration = 8;
+  if (index < lyrics.length - 1) {
+    duration = lyrics[index + 1].time - lyrics[index].time;
+  }
+
+  lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+  lyricsDisplay.appendChild(lineDiv);
+}
+
+function syncLyrics() {
+  const currentTime = audio.currentTime;
+
+  if (currentLine === -1 && currentTime >= lyrics[0].time) {
+    currentLine = 0;
+    showLyric(currentLine);
+  } else if (
+    currentLine < lyrics.length - 1 &&
+    currentTime >= lyrics[currentLine + 1].time
+  ) {
+    currentLine++;
+    showLyric(currentLine);
+  }
+
+  if (isPlaying) {
+    animationId = requestAnimationFrame(syncLyrics);
+  }
+}
+
+function togglePlayPause() {
+  if (audio.paused) {
+    audio.play();
+    icon.src = "pause.png";
+    icon.alt = "Pause";
+    cdImage.style.animationPlayState = "running";
+    currentLine = -1;
+    isPlaying = true;
+    animationId = requestAnimationFrame(syncLyrics);
+  } else {
+    audio.pause();
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    currentLine = -1;
+    isPlaying = false;
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+audio.addEventListener("ended", () => {
+  if (animationId) cancelAnimationFrame(animationId);
+  animationId = null;
+  icon.src = "play.png";
+  icon.alt = "Play";
+  cdImage.style.animationPlayState = "paused";
+  lyricsDisplay.innerHTML = "";
+  audio.currentTime = 0;
+  currentLine = -1;
+  isPlaying = false;
+});
+  </script>
+</body>
+</html>

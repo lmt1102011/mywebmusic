@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8" />
+  <title>Có-ai-hẹn-hò-cùng-em-chưa</title>
+  <link rel="stylesheet" href="styles-song.css" />
+  <link rel="script" href="script.js">
+</head>
+<body>
+  <a href="index.html" class="back-button">back</a>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/a/d/5/5/ad55f39e9ab798a7820619266e260096.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>Có ai hẹn hò cùng em chưa</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="CoAiHenHoCungEmChua-QuanAP-9613055.mp3"></audio>
+  </div>
+<script>
+let animationId = null;
+const audio = document.getElementById("player");
+const icon = document.getElementById("play-icon");
+const lyricsDisplay = document.getElementById("lyricsDisplay");
+const cdImage = document.getElementById("cdImage");
+
+const lyrics = [
+  { time: 20.42, line: "Có ai đang hẹn hò cùng em chưa?" }, { time: 25.99, line: "Rồi ai đón, ai đưa?" }, { time: 29.37, line: "Liệu anh có quan tâm dư thừa?" }, { time: 33.95, line: "Còn anh thì tệ hơn trước kia" }, { time: 37.34, line: "Sống trong hoài niệm sáng đến khuya" }, { time: 40.61, line: "Vì quá yêu một người nên chưa quên được" }, { time: 47.35, line: "Người vấn vương sau cuộc tình thật đáng thương" }, { time: 53.30, line: "Ngồi ôm những tấm hình rồi đôi khi để nước mắt rơi" }, { time: 60.68, line: "Anh gắng chịu được thế thôi, yếu đuối giữ anh rồi" }, { time: 68.46, line: "Giấu anh trong một khoảng trời chơi vơi" }, { time: 73.18, line: "Em có quay về được không? Em nói anh đừng hy vọng" }, { time: 79.94, line: "Yêu đối với em bây giờ chỉ như một chiều gió đông" }, { time: 87.58, line: "Câu nói ấy thật nhẫn tâm, ngày tháng ấy là sai lầm" }, { time: 95.42, line: "Cứ cho là anh đang trách em, đừng để tâm" }, { time: 100.45, line: "Ai cũng nói rằng thời gian sẽ xóa đi những vết thương" }, { time: 107.46, line: "Nhưng có ai chứng minh được cả đời này không vấn vương?" }, { time: 115.01, line: "Hạnh phúc nhé, anh lại thế rồi, nắng sẽ về, chiều đông lại ấm thôi" }, { time: 123.65, line: "Cho dẫu bây giờ và quá khứ, anh vẫn nhớ em" }, { time: 138.35, line: "Người vấn vương sau cuộc tình thật đáng thương" }, { time: 144.13, line: "Ngồi ôm những tấm hình rồi đôi khi để nước mắt rơi" }, { time: 151.48, line: "Anh gắng chịu được thế thôi, yếu đuối giữ anh rồi" }, { time: 159.14, line: "Giấu anh trong một khoảng trời chơi vơi" }, { time: 163.99, line: "Em có quay về được không? Em nói anh đừng hy vọng" }, { time: 170.62, line: "Yêu đối với em bây giờ chỉ như một chiều gió đông" }, { time: 178.64, line: "Câu nói ấy thật nhẫn tâm, ngày tháng ấy là sai lầm" }, { time: 186.18, line: "Cứ cho là anh đáng trách, em đừng để tâm" }, { time: 191.35, line: "Ai cũng nói rằng thời gian sẽ xóa đi những vết thương" }, { time: 198.03, line: "Nhưng có ai chứng minh được cả đời này không vấn vương" }, { time: 205.93, line: "Hạnh phúc nhé, anh lại thế rồi, nắng sẽ về, chiều đông lại ấm thôi" }, { time: 214.58, line: "Cho dẫu bây giờ và quá khứ, anh vẫn nhớ em" }, { time: 225.65, line: "Em có quay về được không? Em nói anh đừng hy vọng" }, { time: 232.55, line: "Yêu đối với em bây giờ chỉ như một chiều gió đông" }, { time: 240.27, line: "Câu nói ấy thật nhẫn tâm, ngày tháng ấy là sai lầm" }, { time: 247.92, line: "Cứ cho anh là đáng trách, em đừng để tâm" }, { time: 253.31, line: "Ai cũng nói rằng thời gian sẽ xóa đi những vết thương" }, { time: 259.91, line: "Nhưng có ai chứng minh được cả đời này không vấn vương?" }, { time: 267.84, line: "Hạnh phúc nhé, anh lại thế rồi, nắng sẽ về, chiều đông lại ấm thôi" }, { time: 278.06, line: "Cho dẫu bây giờ và quá khứ, anh vẫn nhớ em" }
+ ];
+
+let currentLine = -1;
+let isPlaying = false;
+
+function showLyric(index) {
+  lyricsDisplay.innerHTML = "";
+  const lineDiv = document.createElement("div");
+  lineDiv.className = "marquee-text";
+  lineDiv.textContent = lyrics[index].line;
+
+  let duration = 8;
+  if (index < lyrics.length - 1) {
+    duration = lyrics[index + 1].time - lyrics[index].time;
+  }
+
+  lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+  lyricsDisplay.appendChild(lineDiv);
+}
+
+function syncLyrics() {
+  const currentTime = audio.currentTime;
+
+  if (currentLine === -1 && currentTime >= lyrics[0].time) {
+    currentLine = 0;
+    showLyric(currentLine);
+  } else if (
+    currentLine < lyrics.length - 1 &&
+    currentTime >= lyrics[currentLine + 1].time
+  ) {
+    currentLine++;
+    showLyric(currentLine);
+  }
+
+  if (isPlaying) {
+    animationId = requestAnimationFrame(syncLyrics);
+  }
+}
+
+function togglePlayPause() {
+  if (audio.paused) {
+    audio.play();
+    icon.src = "pause.png";
+    icon.alt = "Pause";
+    cdImage.style.animationPlayState = "running";
+    currentLine = -1;
+    isPlaying = true;
+    animationId = requestAnimationFrame(syncLyrics);
+  } else {
+    audio.pause();
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    currentLine = -1;
+    isPlaying = false;
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+audio.addEventListener("ended", () => {
+  if (animationId) cancelAnimationFrame(animationId);
+  animationId = null;
+  icon.src = "play.png";
+  icon.alt = "Play";
+  cdImage.style.animationPlayState = "paused";
+  lyricsDisplay.innerHTML = "";
+  audio.currentTime = 0;
+  currentLine = -1;
+  isPlaying = false;
+});
+
+</script>
+</body>
+</html>

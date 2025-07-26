@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Chắc vì mình chưa tốt</title>
+  <link rel="stylesheet" href="styles-song.css" />
+</head>
+<body>
+  <div>
+    <a href="index.html" class="back-button">back</a>
+  </div>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPJ3w-mGyF9zmO8j8NwTJ95YkpDbTZ0J2YcA&s" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>Chắc vì mình chưa tốt</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="ChacViMinhChuaTot-ThanhHungIdol-6938002.mp3"></audio>
+  </div>
+
+  <script>
+    let animationId = null;
+const audio = document.getElementById("player");
+const icon = document.getElementById("play-icon");
+const lyricsDisplay = document.getElementById("lyricsDisplay");
+const cdImage = document.getElementById("cdImage");
+
+    const lyrics = [
+      { time: 31.11, line: "Tại sao cứ phải khóc bởi một người không xứng đáng với" },
+      { time: 38.41, line: "Tình yêu ta đã trao chẳng chút nghĩ ngợi?" },
+      { time: 45.84, line: "Ngày đầu yêu ai cũng tốt, rồi tự nhiên thiêu đốt hết" },
+      { time: 53.26, line: "Yêu thương đáng lẽ ta nên giữ cho nhau" },
+      { time: 60.82, line: "Nếu không thể là tất cả cùng đi đến hết cuộc đời" },
+      { time: 67.92, line: "Thì cách xa nhau lúc này là điều nên nghĩ tới" },
+      { time: 75.33, line: "Giờ nói yêu nhau thì không thể, còn thương nhau thì anh thấy không cần" },
+      { time: 82.21, line: "Giữ nhau chỉ làm cho trái tim ta càng khép kín" },
+      { time: 89.17, line: "(Người muốn chia tay chắc bởi vì mình chưa tốt)" },
+      { time: 96.72, line: "Giá duyên trời đừng cho hai chúng ta gặp được nhau sẽ tốt hơn nhiều" },
+      { time: 103.63, line: "Vì chẳng có tình yêu nào mãi mãi khi chưa gặp đúng người" },
+      { time: 110.93, line: "Một ngày gần nhau, vạn ngày nhớ, một đời cũng có khi không quên được" },
+      { time: 119.88, line: "Nhưng dường như thế gian ai cũng sẽ đổi thay" },
+      { time: 126.35, line: "Nói ra lời chia tay đau lắm, ai yêu tận tâm sẽ đau tận cùng" },
+      { time: 133.79, line: "Tháng năm gần bên anh khi đó sẽ có người yêu em xoá nhoà" },
+      { time: 141.04, line: "Một người thương vương một người đã nói thương một người, sẽ được gì đâu?" },
+      { time: 149.39, line: "Thôi để em đến nơi em coi là bình yên" },
+      { time: 156.95, line: "" },
+      { time: 186.17, line: "Nếu không thể là tất cả cùng đi đến hết cuộc đời" },
+      { time: 193.48, line: "Thì cách xa nhau lúc này là điều nên nghĩ tới" },
+      { time: 200.78, line: "Giờ nói yêu nhau thì không thể, còn thương nhau thì anh thấy không cần" },
+      { time: 207.80, line: "Giữ nhau chỉ làm cho trái tim ta càng khép kín" },
+      { time: 214.53, line: "(Người muốn chia tay chắc bởi vì mình chưa tốt)" },
+      { time: 222.17, line: "Giá duyên trời đừng cho hai chúng ta gặp được nhau sẽ tốt hơn nhiều" },
+      { time: 229.26, line: "Vì chẳng có tình yêu nào mãi mãi khi chưa gặp đúng người" },
+      { time: 236.66, line: "Một ngày gần nhau, vạn ngày nhớ, một đời cũng có khi không quên được" },
+      { time: 245.31, line: "Nhưng dường như thế gian ai cũng sẽ đổi thay" },
+      { time: 251.84, line: "Nói ra lời chia tay đau lắm, ai yêu tận tâm sẽ đau tận cùng" },
+      { time: 259.02, line: "Tháng năm gần bên anh khi đó sẽ có người yêu em xóa nhòa" },
+      { time: 266.47, line: "Một người thương vương một người đã nói thương một người, sẽ được gì đâu?" },
+      { time: 274.81, line: "Thôi để em đến nơi em coi là bình yên" },
+      { time: 281.35, line: "Nói ra lời chia tay đau lắm, ai yêu tận tâm sẽ đau tận cùng" },
+      { time: 288.78, line: "Tháng năm gần bên anh khi đó sẽ có người yêu em xóa hết (người yêu em xóa hết)" },
+      { time: 296.03, line: "Một người thương vương một người đã nói thương một người, sẽ được gì đâu?" },
+      { time: 304.49, line: "Thôi để em đến nơi em coi là bình yên" },
+      { time: 311.85, line: "Thôi để em đến nơi em coi là bình yên" },
+      { time: 319.06, line: "Ta từ nay mãi gọi nhau là người cũ" },
+      { time: 335.81, line: "Hah, hah, hah-hah" },
+      { time: 345.68, line: "" }
+
+];
+
+let currentLine = -1;
+let isPlaying = false;
+
+function showLyric(index) {
+  lyricsDisplay.innerHTML = "";
+  const lineDiv = document.createElement("div");
+  lineDiv.className = "marquee-text";
+  lineDiv.textContent = lyrics[index].line;
+
+  let duration = 8;
+  if (index < lyrics.length - 1) {
+    duration = lyrics[index + 1].time - lyrics[index].time;
+  }
+
+  lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+  lyricsDisplay.appendChild(lineDiv);
+}
+
+function syncLyrics() {
+  const currentTime = audio.currentTime;
+
+  if (currentLine === -1 && currentTime >= lyrics[0].time) {
+    currentLine = 0;
+    showLyric(currentLine);
+  } else if (
+    currentLine < lyrics.length - 1 &&
+    currentTime >= lyrics[currentLine + 1].time
+  ) {
+    currentLine++;
+    showLyric(currentLine);
+  }
+
+  if (isPlaying) {
+    animationId = requestAnimationFrame(syncLyrics);
+  }
+}
+
+function togglePlayPause() {
+  if (audio.paused) {
+    audio.play();
+    icon.src = "pause.png";
+    icon.alt = "Pause";
+    cdImage.style.animationPlayState = "running";
+    currentLine = -1;
+    isPlaying = true;
+    animationId = requestAnimationFrame(syncLyrics);
+  } else {
+    audio.pause();
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    currentLine = -1;
+    isPlaying = false;
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+audio.addEventListener("ended", () => {
+  if (animationId) cancelAnimationFrame(animationId);
+  animationId = null;
+  icon.src = "play.png";
+  icon.alt = "Play";
+  cdImage.style.animationPlayState = "paused";
+  lyricsDisplay.innerHTML = "";
+  audio.currentTime = 0;
+  currentLine = -1;
+  isPlaying = false;
+});
+
+  </script>
+</body>
+</html>

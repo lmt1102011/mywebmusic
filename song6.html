@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>hôm nay em cưới rồi</title>
+  <link rel="stylesheet" href="styles-song.css" />
+</head>
+<body>
+  <div>
+    <a href="index.html" class="back-button">back</a>
+  </div>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/0/5/6/6/056652306efa257560bcf64b30f756a3.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>hôm nay em cưới rồi</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="HomNayEmCuoiRoiLive-KhaiDang-6847347.mp3"></audio>
+  </div>
+
+  <script>
+    let animationId = null;
+const audio = document.getElementById("player");
+const icon = document.getElementById("play-icon");
+const lyricsDisplay = document.getElementById("lyricsDisplay");
+const cdImage = document.getElementById("cdImage");
+
+    const lyrics = [
+{ time: 5.36, line: "Muốn đi vài hôm xa chính nơi ta từng có phút êm đềm" },
+  { time: 52.41, line: "Trước ngày giông tố đến tìm" },
+  { time: 57.65, line: "Đến khi nhận ra nên quý hơn những ngày tháng sống bên nhau" },
+  { time: 66.45, line: "Thì mình muộn mất rồi" },
+  { time: 71.03, line: "Giờ nay em có lẽ rất vui" },
+  { time: 76.03, line: "" },
+  { time: 79.18, line: "Cùng người em yêu chung bước, không quay lại nhìn" },
+  { time: 85.34, line: "Dù sao thì anh vẫn mong em luôn bình yên" },
+  { time: 91.79, line: "Và xin lỗi vì chẳng đến chúc phúc cho em" },
+  { time: 100.42, line: "Vì ngày hôm nay em cưới rồi" },
+  { time: 104.34, line: "Vụn vỡ vết thương đau mãi trong tim" },
+  { time: 109.18, line: "Người đàn ông may mắn ấy từ nay đã có em" },
+  { time: 114.55, line: "Chỉ muốn đến đây gặp em một lần" },
+  { time: 118.43, line: "Để thấy em hạnh phúc thế nào rồi anh đi" },
+  { time: 124.94, line: "" },
+  { time: 128.24, line: "Vì ngày hôm nay em cưới rồi" },
+  { time: 131.58, line: "Mai sau anh sống thế nào" },
+  { time: 134.95, line: "Một người đã mang cả thế giới" },
+  { time: 138.35, line: "Sánh đôi với tình yêu mới" },
+  { time: 141.67, line: "Ngày em đẹp nhất trên đời" },
+  { time: 145.22, line: "Là ngày chúng ta xa mãi một người" },
+  { time: 150.92, line: "Nợ duyên đến nay mình trả hết rồi" },
+  { time: 157.31, line: "Áo cưới em màu trắng tinh" },
+  { time: 160.74, line: "Nước mắt anh cũng trắng tinh" },
+  { time: 164.06, line: "Có nỗi đau mà vẫn im lặng thinh" },
+  { time: 168.82, line: "(Nay ngày vui của em anh thật không dám tin)" },
+  { time: 172.12, line: "Đến lúc em phải nắm tay người mà em sắp kêu là chồng" },
+  { time: 178.13, line: "Thật tâm chúc phúc niềm vui ở trên thiệp hồng" },
+  { time: 184.51, line: "Giờ nay em có lẽ rất vui" },
+  { time: 191.27, line: "Cùng người em yêu chung bước không quay lại nhìn" },
+  { time: 198.22, line: "Dù sao thì anh vẫn mong em luôn bình yên" },
+  { time: 203.83, line: "Và xin lỗi vì chẳng đến chúc phúc cho em" },
+  { time: 213.93, line: "Vì ngày hôm nay em cưới rồi" },
+  { time: 217.08, line: "Vụn vỡ vết thương đau mãi trong tim" },
+  { time: 222.05, line: "Người đàn ông may mắn ấy từ nay đã có em" },
+  { time: 227.69, line: "Chỉ muốn đến đây gặp em một lần" },
+  { time: 230.74, line: "Để thấy em hạnh phúc thế nào rồi anh đi" },
+  { time: 238.36, line: "" },
+  { time: 241.39, line: "Vì ngày hôm nay em cưới rồi" },
+  { time: 246.47, line: "Mai sau anh sống thế nào" },
+  { time: 248.68, line: "Một người đã mang cả thế giới" },
+  { time: 251.48, line: "Sánh đôi với tình yêu mới" },
+  { time: 254.70, line: "Ngày em đẹp nhất trên đời" },
+  { time: 258.43, line: "Là ngày chúng ta xa mãi một người" },
+  { time: 263.78, line: "Nợ duyên đến nay mình trả hết rồi" },
+  { time: 269.36, line: "Vì ngày hôm nay em cưới rồi" },
+  { time: 272.76, line: "Mai sau anh sống thế nào" },
+  { time: 276.31, line: "Một người đã mang cả thế giới" },
+  { time: 279.14, line: "Sánh đôi với tình yêu mới" },
+  { time: 281.92, line: "Ngày em đẹp nhất trên đời" },
+  { time: 285.67, line: "Là ngày chúng ta xa mãi một người" },
+  { time: 290.62, line: "Nợ duyên đến nay mình trả hết rồi" },
+  { time: 297.95, line: "Nợ duyên đến nay mình trả hết rồi" }
+
+];
+
+let currentLine = -1;
+let isPlaying = false;
+
+function showLyric(index) {
+  lyricsDisplay.innerHTML = "";
+  const lineDiv = document.createElement("div");
+  lineDiv.className = "marquee-text";
+  lineDiv.textContent = lyrics[index].line;
+
+  let duration = 8;
+  if (index < lyrics.length - 1) {
+    duration = lyrics[index + 1].time - lyrics[index].time;
+  }
+
+  lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+  lyricsDisplay.appendChild(lineDiv);
+}
+
+function syncLyrics() {
+  const currentTime = audio.currentTime;
+
+  if (currentLine === -1 && currentTime >= lyrics[0].time) {
+    currentLine = 0;
+    showLyric(currentLine);
+  } else if (
+    currentLine < lyrics.length - 1 &&
+    currentTime >= lyrics[currentLine + 1].time
+  ) {
+    currentLine++;
+    showLyric(currentLine);
+  }
+
+  if (isPlaying) {
+    animationId = requestAnimationFrame(syncLyrics);
+  }
+}
+
+function togglePlayPause() {
+  if (audio.paused) {
+    audio.play();
+    icon.src = "pause.png";
+    icon.alt = "Pause";
+    cdImage.style.animationPlayState = "running";
+    currentLine = -1;
+    isPlaying = true;
+    animationId = requestAnimationFrame(syncLyrics);
+  } else {
+    audio.pause();
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    currentLine = -1;
+    isPlaying = false;
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+audio.addEventListener("ended", () => {
+  if (animationId) cancelAnimationFrame(animationId);
+  animationId = null;
+  icon.src = "play.png";
+  icon.alt = "Play";
+  cdImage.style.animationPlayState = "paused";
+  lyricsDisplay.innerHTML = "";
+  audio.currentTime = 0;
+  currentLine = -1;
+  isPlaying = false;
+});
+
+  </script>
+</body>
+</html>
