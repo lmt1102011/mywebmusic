@@ -65,14 +65,15 @@ body {
       position: absolute;
       white-space: nowrap;
       color: white;
-      font-size: 24px;
+      font-size: clamp(12px, 2vw, 20px);
       top: 50%;
       transform: translateY(-50%);
       left: 100%;
+      min-width: 100%;
       animation-timing-function: linear;
       animation-fill-mode: forwards;
       text-shadow: 0 0 6px rgba(255,255,255,0.7);
-    }
+}
 
     .play-button {
       background: none;
@@ -119,6 +120,10 @@ body {
     }
 
     @keyframes scrollText {
-      from { transform: translateX(0); }
-      to { transform: translateX(-100vw); }
-    }
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: -100%;
+  }
+}
