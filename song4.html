@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Đáp án cuối cùng</title>
+  <link rel="stylesheet" href="styles-song.css" />
+</head>
+<body>
+  <div>
+    <a href="index.html" class="back-button">back</a>
+  </div>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/e/1/4/c/e14c2a971cdc07af45d943701b8b5c13.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>Đáp án cuối cùng</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="DapAnCuoiCung-QuanAP-7887096.mp3"></audio>
+  </div>
+
+  <script>
+  let animationId = null;
+  const audio = document.getElementById("player");
+  const icon = document.getElementById("play-icon");
+  const lyricsDisplay = document.getElementById("lyricsDisplay");
+  const cdImage = document.getElementById("cdImage");
+
+  const rawLyrics = `
+  [00:01.23] Xin lỗi em về những chuyện mà ta đã nghĩ
+[00:08.10] Xin lỗi em về những gì mà ta đã nói
+[00:13.63] Vì bao câu chuyện mình lúc xưa
+[00:17.10] Giờ đây chẳng thể viết tiếp được
+[00:20.52] Chỉ là xa thôi mà
+[00:22.63] Chẳng khi nào ta ngừng nghĩ đến nhau
+[00:29.44] Bao tháng năm vô tư hồn nhiên biết mấy
+[00:36.54] Những chuyến xe ta đi cùng năm tháng ấy
+[00:41.71] Giờ đây chỉ là những thước phim
+[00:45.26] Phai mờ sâu vào những kỉ niệm
+[00:48.88] Điều duy nhất bây giờ còn nhớ chỉ là vài câu
+[00:54.83] 
+[00:57.86] Xin lỗi vì những lời hứa
+[01:01.29] Xin lỗi chẳng yêu được nữa
+[01:04.98] Xin lỗi vì em chẳng thể, đến cạnh anh mỗi khi trời đổ mưa
+[01:11.86] Xin lỗi vì em đã đúng
+[01:15.28] Xin lỗi vì anh đã sai
+[01:19.04] Xin lỗi vì ta chẳng thể đi cùng nhau để bây giờ cách xa (giờ)
+[01:27.52] Vòng xe nhất là đón đưa em qua từng điểm hẹn ngày đầu tiên
+[01:30.82] Góc phố đèn mờ có ngọn đèn cũ thổi hồn nỗi buồn này vào tim
+[01:34.58] Vòng xe thứ hai là cùng với em đón nắng ngày xuân vào chiều tà
+[01:37.97] Là thèm được nhớ nhưng rồi phải buông với họ gọi đó là yêu xa
+[01:41.64] Em đâu hay biết vẫn có người đứng chờ đợi em tới giữa khuya
+[01:45.16] Chỉ để quan tâm em dẫu biết rằng em đang bận lòng với nửa kia
+[01:48.45] Cùng một góc nhìn nhưng cảm xúc bây giờ dần trở nên vô vị
+[01:52.04] Đứng trên dốc tình, chỉ là mỗi góc nhìn để thấy được em và đô thị
+[01:55.60] Ở trong thành phố, lòng đành cố gào thét khiến cổ họng khát khô
+[01:59.26] Bây giờ là một giờ sáng, cafe đậm hoà cùng gói Bastos
+[02:02.71] Anh từng sống trong tim em quá thời hạn nhưng rồi phải ra đi
+[02:06.17] Thành phố hồi đó có trời gió và em còn hơn cả Paris
+[02:10.44] Ừm
+[02:11.69] Anh cũng chỉ nghĩ về những thứ mơ mộng thôi
+[02:14.21] Dẫu biết thực tế khác xa vời vợi rồi
+[02:16.95] Cũng chả rõ mình đã nhớ em về bao nhiêu đêm
+[02:20.12] Nhưng mà ít nhiều gì thì anh cũng đã từng là một người rất yêu em
+[02:22.31] Xin lỗi vì những lời hứa
+[02:26.16] Xin lỗi chẳng yêu được nữa
+[02:29.66] Xin lỗi vì em chẳng thể, đến cạnh anh mỗi khi trời đổ mưa
+[02:36.66] Xin lỗi vì em đã đúng
+[02:40.21] Xin lỗi vì anh đã sai
+[02:43.87] Xin lỗi vì ta chẳng thể đi cùng nhau để bây giờ cách xa
+[02:49.86] [00:26.59] Trùng hợp thay mưa rơi đúng lúc này
+[00:31.98] Càng nhân thêm niềm đau của một người vẫn đang tổn thương
+[00:39.62] Ngày mấy tháng nào đây anh quên luôn rồi
+[00:45.22] Điều anh nhớ nhất là chỉ mới đây thôi
+[00:51.88] Là hôm nay dù ngồi cạnh bên nhau
+[00:57.18] Không nói với nhau một câu
+[01:00.60] Mình không như giây phút đầu
+[01:05.40] Hình như em muốn nói gì, nhân tiện nói đi
+[01:12.07] Còn gì muốn giấu anh không?
+[01:20.23] Đùa chẳng vui đâu em nhé
+[01:23.36] Chẳng ai muốn một lời chia tay
+[01:26.62] Đừng bóp tim anh như vậy
+[01:29.65] Thật sự anh không muốn nghe
+[01:33.25] Đừng làm như thế
+[01:35.88] Cứ hét lên cho hả hê
+[01:38.67] Cứ mắng anh như ngày xưa
+[01:42.46] Còn hơn em chẳng nói gì
+[01:45.77] Nhìn mắt anh, trả lời anh đi
+[01:48.96] Liệu em vẫn còn cần anh không?
+[01:51.92] Vị trí anh ở trong lòng liệu còn hay đã mất?
+[01:58.91] Xin em làm ơn cho anh lý do vì sao em như vậy
+[02:05.95] Một đáp án thật giản đơn
+[02:09.24] Chỉ mỗi ba từ thôi, "Hết yêu rồi"
+[02:16.02] 
+[02:24.88] Anh không nỡ, thật sự anh không nỡ
+[02:29.96] Cứ ngỡ mỗi khi mình sai thì cả hai cũng sẽ quay lại
+[02:38.69] Tình yêu ai cũng điên cuồng, cuối cùng vẫn buông
+[02:44.62] Buộc lòng đường ai nấy đi
+[02:52.88] Đùa chẳng vui đâu em nhé
+[02:56.03] Chẳng ai muốn một lời chia tay
+[02:59.18] Đừng bóp tim anh như vậy
+[03:02.15] Thật sự anh không muốn nghe
+[03:05.63] Đừng làm như thế
+[03:08.17] Cứ hét lên cho hả hê
+[03:11.47] Cứ mắng anh như ngày xưa
+[03:14.45] Còn hơn em chẳng nói gì
+[03:18.96] Nhìn mắt anh trả lời anh đi
+[03:21.66] Liệu em vẫn còn cần anh không?
+[03:25.15] Vị trí anh ở trong lòng liệu còn hay đã mất?
+[03:31.66] Xin em làm ơn cho anh lý do vì sao em như vậy
+[03:38.52] Một đáp án thật giản đơn
+[03:42.39] Chỉ mỗi ba từ thôi, "Hết yêu rồi"
+[03:47.03] Nước mắt em không thèm rơi khi em bước đi
+[03:51.65] Từ lâu cái tôi của anh quá lớn lại khóc
+[04:00.24] Nhìn mắt anh trả lời anh đi
+[04:03.28] Nhìn mắt anh trả lời anh đi
+[04:06.23] Liệu em vẫn còn cần anh không?
+[04:09.52] Vị trí anh ở trong lòng liệu còn hay đã mất?
+[04:16.34] Xin em làm ơn cho anh lý do vì sao em như vậy
+[04:23.60] Một đáp án thật giản đơn
+[04:26.69] Chỉ mỗi ba từ thôi, "Hết yêu rồi"
+[04:36.37] Một đáp án thật giản đơn
+[04:39.72] Chỉ mỗi ba từ thôi, "Hết yêu rồi"
+[04:48.73] `;
+
+  const lyrics = rawLyrics
+    .trim()
+    .split('\n')
+    .filter(line => line.match(/^\[\d{2}:\d{2}\.\d{2}\]/))
+    .map(line => {
+      const match = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)/);
+      if (!match) return null;
+      const minutes = parseInt(match[1]);
+      const seconds = parseInt(match[2]);
+      const centiseconds = parseInt(match[3]);
+      const text = match[4];
+      const time = +(minutes * 60 + seconds + centiseconds / 100).toFixed(2);
+      return { time, line: text };
+    })
+    .filter(Boolean);
+
+  let currentLine = -1;
+  let isPlaying = false;
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+  let currentLine = -1;
+  let isPlaying = false;}
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+    let duration = 8;
+    if (index < lyrics.length - 1) {
+      duration = lyrics[index + 1].time - lyrics[index].time;
+    }
+
+    lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+    lyricsDisplay.appendChild(lineDiv);
+  }
+
+  function syncLyrics() {
+    const currentTime = audio.currentTime;
+
+    if (currentLine === -1 && currentTime >= lyrics[0].time) {
+      currentLine = 0;
+      showLyric(currentLine);
+    } else if (
+      currentLine < lyrics.length - 1 &&
+      currentTime >= lyrics[currentLine + 1].time
+    ) {
+      currentLine++;
+      showLyric(currentLine);
+    }
+
+    if (isPlaying) {
+      animationId = requestAnimationFrame(syncLyrics);
+    }
+  }
+
+  function togglePlayPause() {
+    if (audio.paused) {
+      audio.play();
+      icon.src = "pause.png";
+      icon.alt = "Pause";
+      cdImage.style.animationPlayState = "running";
+      currentLine = -1;
+      isPlaying = true;
+      animationId = requestAnimationFrame(syncLyrics);
+    } else {
+      audio.pause();
+      icon.src = "play.png";
+      icon.alt = "Play";
+      cdImage.style.animationPlayState = "paused";
+      lyricsDisplay.innerHTML = "";
+      currentLine = -1;
+      isPlaying = false;
+      if (animationId) cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+
+  audio.addEventListener("ended", () => {
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    audio.currentTime = 0;
+    currentLine = -1;
+    isPlaying = false;
+  });
+</script>
+</body>
+</html>

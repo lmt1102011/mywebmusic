@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>tháng tư là lời nói dối của em</title>
+  <link rel="stylesheet" href="styles-song.css" />
+</head>
+<body>
+  <div>
+    <a href="index.html" class="back-button">back</a>
+  </div>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://avatar-ex-swe.nixcdn.com/playlist/2020/11/17/a/a/3/2/1605596166025.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>tháng tư là lời nói dối của em</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="Thang4LaLoiNoiDoiCuaEmSEESINGSHARE1-HaAnhTuan-5302279.mp3"></audio>
+  </div>
+
+<script>
+  let animationId = null;
+  const audio = document.getElementById("player");
+  const icon = document.getElementById("play-icon");
+  const lyricsDisplay = document.getElementById("lyricsDisplay");
+  const cdImage = document.getElementById("cdImage");
+
+  const rawLyrics = `
+[00:31.59] Mùa xuân có em như chưa bắt đầu
+[00:38.23] Và cơn gió như khẽ mơn man lay từng nhành hoa rơi
+[00:45.04] Em đã bước tới như em đã từng
+[00:52.28] Chạy trốn với anh trên cánh đồng xanh
+[00:59.06] Khúc nhạc hòa cùng nắng chiều dịu dàng để mình gần lại mãi
+[01:05.63] Nói lời thì thầm những điều thật thà đã giữ trong tim mình
+[01:12.87] Những chặng đường dài ngỡ mình mệt nhoài đã một lần gục ngã
+[01:20.63] Tháng tư có em ở đây nhìn tôi mỉm cười
+[01:26.66] Những cánh hoa phai tàn thật nhanh, em có bay xa, em có đi xa mãi
+[01:33.70] Tháng tư đôi khi thật mong manh, để mình nói ra những câu chân thật
+[01:41.27] Giá như tôi một lần tin em, cô gái tôi thương nay hóa theo mây gió
+[01:48.94] Để lại tháng tư ở đó
+[02:14.97] Mùa xuân mất em như đã bắt đầu
+[02:21.87] Và cơn gió như khẽ vô tình lay từng nhành hoa rơi
+[02:29.02] Em vội xa khuất theo tia nắng chiều
+[02:36.09] Để lại dấu chân giữa cánh đồng xanh
+[02:42.34] Khúc nhạc thầm lặng giữa chiều muộn màng, để mình gần lại mãi
+[02:49.82] Nói lời thì thầm những điều thật thà, đã giữ trong tim mình
+[02:56.78] Những chặng đường dài ngỡ mình mệt nhoài, đã một lần gục ngã
+[03:03.82] Tháng tư ánh sao phía xa bỗng nhiên dần tàn
+[03:10.43] Những cánh hoa phai tàn thật nhanh, em có bay xa, em có đi xa mãi
+[03:17.85] Tháng tư đôi khi thật mong manh để mình nói ra những câu chân thật
+[03:25.24] Giá như tôi một lần tin em, cô gái tôi thương, nay hóa theo mây gió
+[03:33.19] Để lại tháng tư ở đó
+[03:40.29] Và tôi sẽ sống như những gì em thầm mơ
+[03:48.09] Và tôi sẽ bước tiếp trên con đường mình đã chọn
+[03:54.66] Và khi tôi chết sẽ mỉm cười khi gặp em
+[04:01.57] Khẽ chào cô gái tháng tư của tôi
+[04:08.13] Nhưng cánh hoa phai tàn thật nhanh, em đã bay xa, em đã đi xa mãi
+[04:15.04] Tháng tư đôi khi thật mong manh
+[04:18.85] Để mình nói ra...
+[04:22.52] Giá như tôi một lần tin em, cô gái tôi thương, nay hóa theo mây gió
+[04:30.38] Để lại tháng tư xa mãi
+[04:37.79] Để lại tháng tư, mình anh
+[04:59.00] 
+  `;
+
+  const lyrics = rawLyrics
+    .trim()
+    .split('\n')
+    .filter(line => line.match(/^\[\d{2}:\d{2}\.\d{2}\]/))
+    .map(line => {
+      const match = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)/);
+      if (!match) return null;
+      const minutes = parseInt(match[1]);
+      const seconds = parseInt(match[2]);
+      const centiseconds = parseInt(match[3]);
+      const text = match[4];
+      const time = +(minutes * 60 + seconds + centiseconds / 100).toFixed(2);
+      return { time, line: text };
+    })
+    .filter(Boolean);
+
+  let currentLine = -1;
+  let isPlaying = false;
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+  let currentLine = -1;
+  let isPlaying = false;}
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+    let duration = 8;
+    if (index < lyrics.length - 1) {
+      duration = lyrics[index + 1].time - lyrics[index].time;
+    }
+
+    lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+    lyricsDisplay.appendChild(lineDiv);
+  }
+
+  function syncLyrics() {
+    const currentTime = audio.currentTime;
+
+    if (currentLine === -1 && currentTime >= lyrics[0].time) {
+      currentLine = 0;
+      showLyric(currentLine);
+    } else if (
+      currentLine < lyrics.length - 1 &&
+      currentTime >= lyrics[currentLine + 1].time
+    ) {
+      currentLine++;
+      showLyric(currentLine);
+    }
+
+    if (isPlaying) {
+      animationId = requestAnimationFrame(syncLyrics);
+    }
+  }
+
+  function togglePlayPause() {
+    if (audio.paused) {
+      audio.play();
+      icon.src = "pause.png";
+      icon.alt = "Pause";
+      cdImage.style.animationPlayState = "running";
+      currentLine = -1;
+      isPlaying = true;
+      animationId = requestAnimationFrame(syncLyrics);
+    } else {
+      audio.pause();
+      icon.src = "play.png";
+      icon.alt = "Play";
+      cdImage.style.animationPlayState = "paused";
+      lyricsDisplay.innerHTML = "";
+      currentLine = -1;
+      isPlaying = false;
+      if (animationId) cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+
+  audio.addEventListener("ended", () => {
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    audio.currentTime = 0;
+    currentLine = -1;
+    isPlaying = false;
+  });
+</script>
+
+
+</body>
+</html>

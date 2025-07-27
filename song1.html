@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8" />
+  <title>Có-ai-hẹn-hò-cùng-em-chưa</title>
+  <link rel="stylesheet" href="styles-song.css" />
+  <link rel="script" href="script.js">
+</head>
+<body>
+  <a href="index.html" class="back-button">back</a>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/a/d/5/5/ad55f39e9ab798a7820619266e260096.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>Có ai hẹn hò cùng em chưa</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="CoAiHenHoCungEmChua-QuanAP-9613055.mp3"></audio>
+  </div>
+<script>
+  let animationId = null;
+  const audio = document.getElementById("player");
+  const icon = document.getElementById("play-icon");
+  const lyricsDisplay = document.getElementById("lyricsDisplay");
+  const cdImage = document.getElementById("cdImage");
+
+  const rawLyrics = `
+  [00:20.42] Có ai đang hẹn hò cùng em chưa?
+[00:25.99] Rồi ai đón, ai đưa?
+[00:29.37] Liệu anh có quan tâm dư thừa?
+[00:33.95] Còn anh thì tệ hơn trước kia
+[00:37.34] Sống trong hoài niệm sáng đến khuya
+[00:40.61] Vì quá yêu một người nên chưa quên được
+[00:47.35] Người vấn vương sau cuộc tình thật đáng thương
+[00:53.30] Ngồi ôm những tấm hình rồi đôi khi để nước mắt rơi
+[01:00.68] Anh gắng chịu được thế thôi, yếu đuối giữ anh rồi
+[01:08.46] Giấu anh trong một khoảng trời chơi vơi
+[01:13.18] Em có quay về được không? Em nói anh đừng hy vọng
+[01:19.94] Yêu đối với em bây giờ chỉ như một chiều gió đông
+[01:27.58] Câu nói ấy thật nhẫn tâm, ngày tháng ấy là sai lầm
+[01:35.42] Cứ cho là anh đang trách em, đừng để tâm
+[01:40.45] Ai cũng nói rằng thời gian sẽ xóa đi những vết thương
+[01:47.46] Nhưng có ai chứng minh được cả đời này không vấn vương?
+[01:55.01] Hạnh phúc nhé, anh lại thế rồi, nắng sẽ về, chiều đông lại ấm thôi
+[02:03.65] Cho dẫu bây giờ và quá khứ, anh vẫn nhớ em
+[02:12.64] 
+[02:18.35] Người vấn vương sau cuộc tình thật đáng thương
+[02:24.13] Ngồi ôm những tấm hình rồi đôi khi để nước mắt rơi
+[02:31.48] Anh gắng chịu được thế thôi, yếu đuối giữ anh rồi
+[02:39.14] Giấu anh trong một khoảng trời chơi vơi
+[02:43.99] Em có quay về được không? Em nói anh đừng hy vọng
+[02:50.62] Yêu đối với em bây giờ chỉ như một chiều gió đông
+[02:58.64] Câu nói ấy thật nhẫn tâm, ngày tháng ấy là sai lầm
+[03:06.18] Cứ cho là anh đáng trách, em đừng để tâm
+[03:11.35] Ai cũng nói rằng thời gian sẽ xóa đi những vết thương
+[03:18.03] Nhưng có ai chứng minh được cả đời này không vấn vương
+[03:25.93] Hạnh phúc nhé, anh lại thế rồi, nắng sẽ về, chiều đông lại ấm thôi
+[03:34.58] Cho dẫu bây giờ và quá khứ, anh vẫn nhớ em
+[03:45.65] Em có quay về được không? Em nói anh đừng hy vọng
+[03:52.55] Yêu đối với em bây giờ chỉ như một chiều gió đông
+[04:00.27] Câu nói ấy thật nhẫn tâm, ngày tháng ấy là sai lầm
+[04:07.92] Cứ cho anh là đáng trách, em đừng để tâm
+[04:13.31] Ai cũng nói rằng thời gian sẽ xóa đi những vết thương
+[04:19.91] Nhưng có ai chứng minh được cả đời này không vấn vương?
+[04:27.84] Hạnh phúc nhé, anh lại thế rồi, nắng sẽ về, chiều đông lại ấm thôi
+[04:38.06] Cho dẫu bây giờ và quá khứ, anh vẫn nhớ em
+[04:48.62] 
+  `;
+
+  const lyrics = rawLyrics
+    .trim()
+    .split('\n')
+    .filter(line => line.match(/^\[\d{2}:\d{2}\.\d{2}\]/))
+    .map(line => {
+      const match = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)/);
+      if (!match) return null;
+      const minutes = parseInt(match[1]);
+      const seconds = parseInt(match[2]);
+      const centiseconds = parseInt(match[3]);
+      const text = match[4];
+      const time = +(minutes * 60 + seconds + centiseconds / 100).toFixed(2);
+      return { time, line: text };
+    })
+    .filter(Boolean);
+
+  let currentLine = -1;
+  let isPlaying = false;
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+  let currentLine = -1;
+  let isPlaying = false;}
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+    let duration = 8;
+    if (index < lyrics.length - 1) {
+      duration = lyrics[index + 1].time - lyrics[index].time;
+    }
+
+    lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+    lyricsDisplay.appendChild(lineDiv);
+  }
+
+  function syncLyrics() {
+    const currentTime = audio.currentTime;
+
+    if (currentLine === -1 && currentTime >= lyrics[0].time) {
+      currentLine = 0;
+      showLyric(currentLine);
+    } else if (
+      currentLine < lyrics.length - 1 &&
+      currentTime >= lyrics[currentLine + 1].time
+    ) {
+      currentLine++;
+      showLyric(currentLine);
+    }
+
+    if (isPlaying) {
+      animationId = requestAnimationFrame(syncLyrics);
+    }
+  }
+
+  function togglePlayPause() {
+    if (audio.paused) {
+      audio.play();
+      icon.src = "pause.png";
+      icon.alt = "Pause";
+      cdImage.style.animationPlayState = "running";
+      currentLine = -1;
+      isPlaying = true;
+      animationId = requestAnimationFrame(syncLyrics);
+    } else {
+      audio.pause();
+      icon.src = "play.png";
+      icon.alt = "Play";
+      cdImage.style.animationPlayState = "paused";
+      lyricsDisplay.innerHTML = "";
+      currentLine = -1;
+      isPlaying = false;
+      if (animationId) cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+
+  audio.addEventListener("ended", () => {
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    audio.currentTime = 0;
+    currentLine = -1;
+    isPlaying = false;
+  });
+</script>
+</body>
+</html>

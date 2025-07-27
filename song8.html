@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>khuất lối</title>
+  <link rel="stylesheet" href="styles-song.css" />
+</head>
+<body>
+  <div>
+    <a href="index.html" class="back-button">back</a>
+  </div>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/0/a/5/4/0a542ce401be49c5ea47edee1a25dcf1.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>khuất lối</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="KhuatLoi-HKray-8422419.mp3"></audio>
+  </div>
+
+<script>
+  let animationId = null;
+  const audio = document.getElementById("player");
+  const icon = document.getElementById("play-icon");
+  const lyricsDisplay = document.getElementById("lyricsDisplay");
+  const cdImage = document.getElementById("cdImage");
+
+  const rawLyrics = `
+  [00:23.45] Hôm nay mưa phủ bay lay nhẹ hương thơm đôi tóc mây
+[00:27.81] Nhớ thương nàng, anh lang thang trong đêm mà đâu có hay
+[00:34.03] Đôi câu yêu ngày nao vẫn còn in trong tâm trí anh
+[00:38.51] Lối xưa về giờ đây vắng tanh, lạnh lùng nhớ ai
+[00:44.87] Thương thân anh thủy chung, đêm về nặng lòng mình nhớ thương
+[00:49.29] Khói sương mờ bên hiên hòa chung đèn khuya hắt hiu
+[00:55.49] Ai yêu ai để cho bây giờ đôi câu thơ dở dang
+[00:59.79] Hóa ra ngàn yêu thương đến vậy giờ cũng vỡ tan
+[01:04.62] Anh đi về bóng tối khuất lối, chìm dần trong bao đêm trôi
+[01:11.13] Thương thì thương vậy thôi, sao giờ con tim vỡ đôi?
+[01:15.68] Em ơi anh buồn, anh nhớ ánh mắt, nụ cười em đang nơi đâu?
+[01:21.55] Sầu đôi bờ mi, anh buồn trong cô liêu
+[01:25.74] Tiếc thương hoài những phút đắm đuối ân cần ta tay trong tay
+[01:32.40] Sao giờ đây lẻ loi chỉ mình anh trong men say?
+[01:36.79] Thôi cứ dặn lòng ta quên đi em, hết đêm này ta quên đi em
+[01:42.82] Ngày mai bình yên sẽ về, quên đi em
+[01:47.60] 
+[01:57.48] Yah, yah
+[01:58.65] Anh sẽ cố quên đi một người, người anh xem là cả thế giới
+[02:01.52] Anh sẽ cố quên đi một người, nhường cho em tìm hạnh phúc mới
+[02:04.11] Vì anh biết tình mình chỉ đẹp khi tình mình còn nhiều dang dở
+[02:06.72] Và anh biết tình mình kết thúc khi tình mình có nhiều tan vỡ
+[02:08.90] Cố nén chua cay, đêm vùi chôn những niềm nhớ (những niềm nhớ)
+[02:14.37] Ai đó thay lòng, mang khổ đau vào trong giấc mơ
+[02:19.35] Duyên kiếp bẽ bàng, thôi từ đây tình ta rẽ đôi
+[02:24.74] Lui bước về sau, chúc em một đời êm ấm
+[02:29.71] Anh đi về bóng tối khuất lối, chìm dần trong bao đêm trôi
+[02:36.46] Thương thì thương vậy thôi, sao giờ con tim vỡ đôi?
+[02:40.70] Em ơi anh buồn, anh nhớ ánh mắt, nụ cười em đang nơi đâu?
+[02:46.78] Sầu đôi bờ mi, anh buồn trong cô liêu
+[02:51.06] Tiếc thương hoài những phút đắm đuối ân cần ta tay trong tay
+[02:57.78] Sao giờ đây lẻ loi chỉ mình anh trong men say?
+[03:01.94] Thôi cứ dặn lòng ta quên đi em, hết đêm này ta quên đi em
+[03:08.08] Ngày mai bình yên sẽ về, quên đi em
+[03:13.62] Xa rồi từng nhớ thương khờ dại
+[03:18.35] Chỉ mỗi anh nơi đây buồn tênh (một mình anh mơ, một mình anh mơ)
+[03:24.46] Em giờ này phấn son lụa là
+[03:28.91] Bỏ lại đây bao nhiêu cô đơn nhớ thương (nhớ thương oh ho)
+[03:36.35] Anh đi về bóng tối khuất lối, chìm dần trong bao đêm trôi
+[03:43.25] Thương thì thương vậy thôi, sao giờ con tim vỡ đôi?
+[03:47.43] Em ơi anh buồn anh nhớ ánh mắt, nụ cười em đang nơi đâu?
+[03:53.58] Sầu đôi bờ mi, anh buồn trong cô liêu
+[03:57.84] Tiếc thương hoài những phút đắm đuối ân cần ta tay trong tay
+[04:04.39] Sao giờ đây lẻ loi chỉ mình anh trong men say?
+[04:08.82] Thôi cứ dặn lòng ta quên đi em, hết đêm này ta quên đi em
+[04:14.64] Ngày mai bình yên sẽ về, quên đi em
+[04:21.29] 
+  `;
+
+  const lyrics = rawLyrics
+    .trim()
+    .split('\n')
+    .filter(line => line.match(/^\[\d{2}:\d{2}\.\d{2}\]/))
+    .map(line => {
+      const match = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)/);
+      if (!match) return null;
+      const minutes = parseInt(match[1]);
+      const seconds = parseInt(match[2]);
+      const centiseconds = parseInt(match[3]);
+      const text = match[4];
+      const time = +(minutes * 60 + seconds + centiseconds / 100).toFixed(2);
+      return { time, line: text };
+    })
+    .filter(Boolean);
+
+  let currentLine = -1;
+  let isPlaying = false;
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+  let currentLine = -1;
+  let isPlaying = false;}
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+    let duration = 8;
+    if (index < lyrics.length - 1) {
+      duration = lyrics[index + 1].time - lyrics[index].time;
+    }
+
+    lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+    lyricsDisplay.appendChild(lineDiv);
+  }
+
+  function syncLyrics() {
+    const currentTime = audio.currentTime;
+
+    if (currentLine === -1 && currentTime >= lyrics[0].time) {
+      currentLine = 0;
+      showLyric(currentLine);
+    } else if (
+      currentLine < lyrics.length - 1 &&
+      currentTime >= lyrics[currentLine + 1].time
+    ) {
+      currentLine++;
+      showLyric(currentLine);
+    }
+
+    if (isPlaying) {
+      animationId = requestAnimationFrame(syncLyrics);
+    }
+  }
+
+  function togglePlayPause() {
+    if (audio.paused) {
+      audio.play();
+      icon.src = "pause.png";
+      icon.alt = "Pause";
+      cdImage.style.animationPlayState = "running";
+      currentLine = -1;
+      isPlaying = true;
+      animationId = requestAnimationFrame(syncLyrics);
+    } else {
+      audio.pause();
+      icon.src = "play.png";
+      icon.alt = "Play";
+      cdImage.style.animationPlayState = "paused";
+      lyricsDisplay.innerHTML = "";
+      currentLine = -1;
+      isPlaying = false;
+      if (animationId) cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+
+  audio.addEventListener("ended", () => {
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    audio.currentTime = 0;
+    currentLine = -1;
+    isPlaying = false;
+  });
+</script>
+
+
+</body>
+</html>

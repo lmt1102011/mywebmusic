@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>nơi này có anh</title>
+  <link rel="stylesheet" href="styles-song.css" />
+</head>
+<body>
+  <div>
+    <a href="index.html" class="back-button">back</a>
+  </div>
+  <div class="lyrics-box">
+    <div class="image">
+      <img id="cdImage" src="https://upload.wikimedia.org/wikipedia/vi/1/1d/N%C6%A1i_n%C3%A0y_c%C3%B3_anh_-_Single_Cover.jpg" alt="Ảnh bìa bài hát">
+    </div>
+    <h1>nơi này có anh</h1>
+    <div class="marquee-container" id="lyricsDisplay"></div>
+    <button class="play-button" onclick="togglePlayPause()">
+      <img id="play-icon" src="play.png" alt="Play">
+    </button>
+    <audio id="player" src="NoiNayCoAnh-SonTungMTP-4772041.mp3"></audio>
+  </div>
+
+<script>
+  let animationId = null;
+  const audio = document.getElementById("player");
+  const icon = document.getElementById("play-icon");
+  const lyricsDisplay = document.getElementById("lyricsDisplay");
+  const cdImage = document.getElementById("cdImage");
+
+  const rawLyrics = `
+[00:21.26] Em là ai từ đâu bước đến nơi đây dịu dàng chân phương (dịu dàng chân phương)
+[00:26.31] Em là ai tựa như ánh nắng ban mai ngọt ngào trong sương (ngọt ngào trong sương)
+[00:31.39] Ngắm em thật lâu, con tim anh yếu mềm
+[00:36.73] Đắm say từ phút đó, từng giây trôi yêu thêm
+[00:41.72] Bao ngày qua bình minh đánh thức xua tan bộn bề nơi anh (bộn bề nơi anh)
+[00:47.07] Bao ngày qua niềm thương nỗi nhớ bay theo bầu trời trong xanh (bầu trời trong xanh)
+[00:52.32] Liếc đôi hàng mi mong manh, anh thẫn thờ
+[00:57.33] Muốn hôn nhẹ mái tóc, bờ môi em, anh mơ
+[01:02.44] Cầm tay anh (anh), dựa vai anh (anh)
+[01:05.23] Kề bên anh, nơi này có anh
+[01:07.69] Gió mang câu tình ca, ngàn ánh sao vụt qua, nhẹ ôm lấy em
+[01:12.10] (Yêu em, thương em, con tim anh chân thành)
+[01:13.29] Cầm tay anh (anh), dựa vai anh (anh)
+[01:15.86] Kề bên anh, nơi này có anh
+[01:18.16] Khép đôi mi thật lâu
+[01:19.63] Nguyện mãi bên cạnh nhau, yêu say đắm như ngày đầu
+[01:23.84] Mùa xuân đến bình yên, cho anh những giấc mơ
+[01:28.44] Hạ lưu giữ ngày mưa, ngọt ngào nên thơ
+[01:33.92] Mùa thu lá vàng rơi, đông sang, anh nhớ em
+[01:38.87] Tình yêu bé nhỏ xin dành tặng riêng em
+[01:45.86] 
+[01:54.28] (Yeah)
+[01:55.60] Còn đó tiếng nói ấy bên tai vấn vương bao ngày qua
+[01:58.04] Ánh mắt bối rối nhớ thương bao ngày qua
+[02:00.70] Yêu em anh thẫn thờ, con tim bâng khuâng đâu có ngờ
+[02:03.17] Chẳng bao giờ phải mong chờ, đợi ai trong chiều hoàng hôn mờ
+[02:05.96] Đắm chìm hòa vào vần thơ, ngắm nhìn khờ dại mộng mơ
+[02:08.68] Đừng bước vội vàng rồi làm ngơ, lạnh lùng đó làm bộ dạng thờ ơ
+[02:11.37] Nhìn anh đi em nha, hướng nụ cười cho riêng anh nha
+[02:13.53] Đơn giản là yêu, con tim anh lên tiếng thôi
+[02:15.60] Cầm tay anh (anh), dựa vai anh (anh)
+[02:18.63] Kề bên anh, nơi này có anh
+[02:20.70] Gió mang câu tình ca, ngàn ánh sao vụt qua, nhẹ ôm lấy em
+[02:25.12] (Yêu em, thương em, con tim anh chân thành)
+[02:26.53] Cầm tay anh (anh), dựa vai anh (anh)
+[02:28.34] Kề bên anh, nơi này có anh
+[02:31.15] Khép đôi mi thật lâu
+[02:32.61] Nguyện mãi bên cạnh nhau, yêu say đắm như ngày đầu
+[02:36.56] Mùa xuân đến bình yên, cho anh những giấc mơ
+[02:41.48] Hạ lưu giữ ngày mưa, ngọt ngào nên thơ
+[02:47.06] Mùa thu lá vàng rơi, đông sang, anh nhớ em
+[02:51.99] Tình yêu bé nhỏ xin dành tặng riêng em
+[02:57.77] Ah-ah-oh-oh-oh-oh-oh-oh-oh, nhớ thương em
+[03:02.85] Oh-oh-oh-oh-oh-oh-oh-oh-oh, nhớ thương em lắm
+[03:08.58] Ah, phía sau chân trời
+[03:13.04] Có ai băng qua lối về, cùng em đi trên đoạn đường dài
+[03:18.52] Cầm tay anh (anh), dựa vai anh (anh)
+[03:20.92] Kề bên anh, nơi này có anh
+[03:23.28] Gió mang câu tình ca, ngàn ánh sao vụt qua, nhẹ ôm lấy em
+[03:27.57] (Yêu em, thương em, con tim anh chân thành)
+[03:28.94] Cầm tay anh (anh), dựa vai anh (anh)
+[03:31.66] Kề bên anh, nơi này có anh
+[03:33.65] Khép đôi mi thật lâu
+[03:35.14] Nguyện mãi bên cạnh nhau, yêu say đắm như ngày đầu (oh-oh)
+[03:39.10] Mùa xuân đến bình yên, cho anh những giấc mơ
+[03:44.06] Hạ lưu giữ ngày mưa, ngọt ngào nên thơ
+[03:49.31] Mùa thu lá vàng rơi, đông sang, anh nhớ em
+[03:54.57] Tình yêu bé nhỏ xin dành tặng riêng em
+[03:59.64]  
+  `;
+
+  const lyrics = rawLyrics
+    .trim()
+    .split('\n')
+    .filter(line => line.match(/^\[\d{2}:\d{2}\.\d{2}\]/))
+    .map(line => {
+      const match = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)/);
+      if (!match) return null;
+      const minutes = parseInt(match[1]);
+      const seconds = parseInt(match[2]);
+      const centiseconds = parseInt(match[3]);
+      const text = match[4];
+      const time = +(minutes * 60 + seconds + centiseconds / 100).toFixed(2);
+      return { time, line: text };
+    })
+    .filter(Boolean);
+
+  let currentLine = -1;
+  let isPlaying = false;
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+  let currentLine = -1;
+  let isPlaying = false;}
+
+  function showLyric(index) {
+    lyricsDisplay.innerHTML = "";
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "marquee-text";
+    lineDiv.textContent = lyrics[index].line;
+
+    let duration = 8;
+    if (index < lyrics.length - 1) {
+      duration = lyrics[index + 1].time - lyrics[index].time;
+    }
+
+    lineDiv.style.animation = `scrollText ${duration}s linear forwards`;
+    lyricsDisplay.appendChild(lineDiv);
+  }
+
+  function syncLyrics() {
+    const currentTime = audio.currentTime;
+
+    if (currentLine === -1 && currentTime >= lyrics[0].time) {
+      currentLine = 0;
+      showLyric(currentLine);
+    } else if (
+      currentLine < lyrics.length - 1 &&
+      currentTime >= lyrics[currentLine + 1].time
+    ) {
+      currentLine++;
+      showLyric(currentLine);
+    }
+
+    if (isPlaying) {
+      animationId = requestAnimationFrame(syncLyrics);
+    }
+  }
+
+  function togglePlayPause() {
+    if (audio.paused) {
+      audio.play();
+      icon.src = "pause.png";
+      icon.alt = "Pause";
+      cdImage.style.animationPlayState = "running";
+      currentLine = -1;
+      isPlaying = true;
+      animationId = requestAnimationFrame(syncLyrics);
+    } else {
+      audio.pause();
+      icon.src = "play.png";
+      icon.alt = "Play";
+      cdImage.style.animationPlayState = "paused";
+      lyricsDisplay.innerHTML = "";
+      currentLine = -1;
+      isPlaying = false;
+      if (animationId) cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+
+  audio.addEventListener("ended", () => {
+    if (animationId) cancelAnimationFrame(animationId);
+    animationId = null;
+    icon.src = "play.png";
+    icon.alt = "Play";
+    cdImage.style.animationPlayState = "paused";
+    lyricsDisplay.innerHTML = "";
+    audio.currentTime = 0;
+    currentLine = -1;
+    isPlaying = false;
+  });
+</script>
+
+
+</body>
+</html>
